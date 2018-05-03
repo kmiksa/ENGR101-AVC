@@ -1,51 +1,28 @@
-# Example AVC Readme
+#AVC Team Readme
 
-An example project repository for the ENGR101 autonomous vehicle challenge (AVC) 2017.
-This is a snapshot of a project taken part way through Week 2. The team has assessed their progress on their Week 1 objects, and has set and are working towards week 2 objective and are looking towards their week 3 objectives.
-
-| Parts  | Cost (Arthur$)  |
-| :------------ |:---------------:| 
-| Analog IR Sensor (medium range) | $25 | 
-| Digital IR Sensor (short range) | $15 |
-| Lever action Whisker push buttons (digital) | $10 |
-| 180◦ servos | $10 |
-| ...      | ... |
-
-Limited number of 3D printed parts 
-
-A picture of our ideal robot is shown [here](/robot.jpg). 
 
 ###Week 1 Checklist
-- [x] Bonnie: Arrange team meetings 
-- [x] Bonnie: Check all have signed plan 
-- [x] Bonnie: Assist with chassis design
-- [x] Darren: Produce code for straight line movement,
-- [ ] ~~Darren: Research PID~~ (no time this week, put in Week 2 checklist)
-- [x] Tyler: Setup team github repository
-- [ ] ~~Tyler: implement sensor averaging~~ (reasssigned to Leo as Tyler's ill)
-- [x] Leo: Assemble chassis and hardware
-- [ ] Leo: Develop prototype chassis
-- [ ] Leo: Implement sensor averaging
+- [ ] Hardware: Basic Plan
+- [ ] Hardware: Test Boards
+- [ ] Hardware: Sketches
+- [ ] Hardware: CAD
+- [ ] Hardware: 3d-Printing
+- [ ] Software: Basic Logic/Planning
+- [ ] Software: Set-up Git
+- [ ] Software: Set-up Google Drive
+- [ ] Software: Set-up Discord
+- [ ] Software: Research Camera Vision
+- [ ] Software: Flowchart/Psuedocode for first segment of maze
+- [ ] Team: Agree on number of sensors/motors
+- [ ] Team: Timeline Drawn up
+- [ ] Team: Overall AVC plan complete and signed.
 
-####Week 1 Review (5th May 2017)
-* Everyone other than Leo did all their assigned tasks this week.
-* We have set goals for next week ([Week 2 Checklist](#week-2-checklist))
-* Bonnie will help Leo to catchup
-* All up to date files on Github (Woot! We made our first real code commit today!)
-* Leo, Bonnie and Darren attended the team meeting this week (Tyler sent his apologies deue to illness)
-* Leo, Bonnie and Darren were at the lab this week.
-* Everyone has signed the AVC plan, we're working on the Background section of the progress report now. We have decided not to share them within the group.
+####Week 1 Review (04/05/2018)
 
 ###Week 2 Checklist
-- [ ] Bonnie: Arrange team digital meeting 
-- [ ] Bonnie: Check team member progress
-- [ ] Bonnie: Plan for following week (setup checklist)
-- [ ] Darren: Suggest order of method development
-- [ ] Darren: Research PID
-- [ ] Tyler: Update github with progress from last meeting
-- [ ] Leo: Finalise chassis design
 
-###Week 3 Checklist (work in progress - Bonnie)
+
+###Week 3 Checklist 
 
 
 ###AVC Project Timetable
