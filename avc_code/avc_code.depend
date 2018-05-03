@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1525227509 source:/home/phillip/ENGR101-2017/avc_code/main.cpp
-	<stdio.h>
-	<time.h>
-	"E101.h"
-
-1525225319 /home/phillip/ENGR101-2017/avc_code/E101.h
-
