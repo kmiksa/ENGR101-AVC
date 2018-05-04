@@ -51,7 +51,7 @@ void dead_stop(){
 void move_forward(){
 	left_motor(100);
 	right_motor(100);
-	sleep1(0, 500)
+	sleep1(0, 500);
 	dead_stop();
 }
 
