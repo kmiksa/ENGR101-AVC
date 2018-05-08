@@ -2,12 +2,12 @@
 #include <time.h>
 #include "E101.h"
 
-#define CAMERA_MAX_X 320
-#define CAMERA_MAX_Y 240
+#define CAMERA_MAX_X 319
+#define CAMERA_MAX_Y  240
 #define LEFT_MOTOR_PIN 1
-#define LEFT_MOTOR_OFFSET  0.0 //decimal multipliers to balance motor speed.
+#define LEFT_MOTOR_OFFSET  1.5 //decimal multipliers to balance motor speed.
 #define RIGHT_MOTOR_PIN 2
-#define RIGHT_MOTOR_OFFSET 0.0
+#define RIGHT_MOTOR_OFFSET 1.68
 
 int get_direction_from_camera(int white_threshold){
 	int err = 0, white_count = 0;
@@ -27,33 +27,40 @@ int get_direction_from_camera(int white_threshold){
 	return err/white_count; //normalized value
 }
 
-int adjust_heading(int direction){
-	return 0;
-}
-
 void left_motor(int speed){
-	//Set left motor speed accounting for offset
-	//REMEMBER TO STOP THE MOTOR AFTER CALLING THIS
-	set_motor(LEFT_MOTOR_PIN, speed * LEFT_MOTOR_OFFSET);
+        //Set left motor speed accounting for offset
+        //REMEMBER TO STOP THE MOTOR AFTER CALLING THIS
+        set_motor(LEFT_MOTOR_PIN, speed * LEFT_MOTOR_OFFSET);
 }
 
 void right_motor(int speed){
-	//Set right motor speed accounting for offset
-	//REMEMBER TO STOP THE MOTOR AFTER CALLING THIS
-	set_motor(RIGHT_MOTOR_PIN, speed * RIGHT_MOTOR_OFFSET);
+        //Set right motor speed accounting for offset
+        //REMEMBER TO STOP THE MOTOR AFTER CALLING THIS
+ set_motor(RIGHT_MOTOR_PIN, speed * RIGHT_MOTOR_OFFSET);
 }
 
+
 void dead_stop(){
-	stop(1);
-	stop(2);
+        set_motor(1, 0);
+        set_motor(2, 0);
+}
+
+void adjust_heading(int direction){
+        left_motor(direction);
+        right_motor(0-direction);
+        sleep1(0, 100);
+        dead_stop();
 }
 
 void move_forward(){
-	left_motor(100);
-	right_motor(100);
-	sleep1(0, 500);
-	dead_stop();
+        left_motor(50);
+        right_motor(50);
+        sleep1(0 , 1000);
+        dead_stop();
+
+ set_motor(RIGHT_MOTOR_PIN, speed * RIGHT_MOTOR_OFFSET);
 }
+
 
 int calculate_white_threshold(){
 	int count = 0, total = 0;
@@ -68,10 +75,22 @@ int calculate_white_threshold(){
 	return total/count;
 }
 
-int main(int argc, char **argv){
-	static int white_threshold = calculate_white_threshold();
+int main(){
+        init();
+        int white_threshold = calculate_white_threshold();
+        int direction = 0, i = 0;
 
-	move_forward();
-	return 0;
+        while(i < 1000){
+                adjust_heading(get_direction_from_camera(white_threshold));
+                move_forward();
+                i++;
+        }
+
+        return 0;
 }
 
+
+
+
+
+               
