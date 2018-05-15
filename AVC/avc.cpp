@@ -26,7 +26,7 @@ int get_direction_from_camera(int white_threshold){
 				err -= pix;
 		}
  	}
-	return white_count > 80  ? (err/white_count) % 256 : -500; //normalized value
+	return white_count < 10000  ? (err/white_count) % 256 : -500; //normalized value
 }
 
 bool scan_right(int white_threshold){
@@ -101,22 +101,35 @@ int main(){
         init();
         int white_threshold = calculate_white_threshold();
         int direction = 0, i = 0;
-        bool maze = false;
+        int quadrant = 1;
 
-        while(i < 10000){
-		direction =  get_direction_from_camera(white_threshold);
-		if (scan_right()){
-			move_forward();
-			while( get_direction_from_camera(white_threshold) > 10){
-			adjust_heading(255);
+        while(1){
+			if(quadrant = 0){
+				connect_to_server();
+				send_to_server("Please");
+				char pwd[24](recieve_from_server());
+				send_to_server(pwd);
+				sleep1(1,0);
+				quadrant++;
+				
 			}
-		}
-		else{
+			if(quadrant = 1){
+				direction =  get_direction_from_camera(white_threshold);
+				if(direction == -500){
+					quadrant++;
+					continue;
+				}
                 adjust_heading(direction);
                 move_forward();
-		}
-                i++;
-        }
+                
+			}
+			if(quadrant = 2){
+				break;
+			}
+			if(quadrant = 3){
+				break;
+			}
+          }
 
         return 0;
 }
