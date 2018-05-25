@@ -64,16 +64,21 @@ int get_direction_from_maze_position(int white_threshold){
 		if(xf > 0)
 			return 0;
 			
-		if(xf < 0 && ((yl > white_threshold && yr > white_threshold))
+		if(xf < 0 && (yl > white_threshold && yr > white_threshold)){
 			return -255;
+		}
 		
-		if(xf < 0 && (yl < white_threshold && yr > white_threshold))
+		if(xf < 0 && (yl < white_threshold && yr > white_threshold)) {
 			return 255;
+		}
 		
-        if(xf < 0 && (yl > white_threshold && yr < white_threshold))
+        if(xf < 0 && (yl > white_threshold && yr < white_threshold)){
+			return -255;
+		}
         
-		else return get_direction_from_camera(white_threshold);	
-		
+		else {
+		return get_direction_from_camera(white_threshold);	
+	}
 }
 
 
@@ -174,7 +179,7 @@ int main(){
 					dead_stop();
 					move_back();
 				}
-				else
+				else{
 					adjust_heading(direction);
 					move_forward();
 			}
