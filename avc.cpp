@@ -3,11 +3,12 @@
 #include "E101.h"
 
 #define CAMERA_MAX_X 319
-#define CAMERA_MAX_Y  240
-#define LEFT_MOTOR_PIN 1
-#define LEFT_MOTOR_OFFSET  1.5 //decimal multipliers to balance motor speed.
-#define RIGHT_MOTOR_PIN 2
-#define RIGHT_MOTOR_OFFSET 1.68
+#define CAMERA_MAX_Y  239
+#define LEFT_MOTOR_PIN 2
+#define LEFT_MOTOR_OFFSET  0.95 //decimal multipliers to balance motor speed.
+#define RIGHT_MOTOR_PIN 1
+#define RIGHT_MOTOR_OFFSET 1
+#define HARD_TURN 255
 
 void move_back();
 
@@ -17,8 +18,8 @@ int get_direction_from_camera(int white_threshold){
 	take_picture();
 
 	for(int x = 0; x < CAMERA_MAX_X; x++){
-		for(int y = CAMERA_MAX_Y / 4; y < (CAMERA_MAX_Y / 4) * 3; y++){
-			int pix = get_pixel(y, x, 3);
+		for(int i = 0; i <= 3; i++){
+			int pix = get_pixel(115 + i, x, 3);
 			if(pix > white_threshold) white_count++;
 			if(x > (CAMERA_MAX_X / 2) )
 				err += pix;
@@ -26,8 +27,11 @@ int get_direction_from_camera(int white_threshold){
 				err -= pix;
 		}
  	}
-	return white_count < 10000  ? (err/white_count) % 256 : -500; //normalized value
+	if(white_count < 32)
+		return -500;
+	 return white_count < 720 ? (err/white_count) % 255 : 500; //normalized value
 }
+
 
 int scan_line(int sx, int ex, int sy, int ey){ //start x, end x, start y, end  y 
     take_picture();
@@ -48,39 +52,36 @@ int scan_line(int sx, int ex, int sy, int ey){ //start x, end x, start y, end  y
     }
     return max; 
 }
-int get_corners(int white_threshold){
-    take_picture();
-    
-    
-    
-    int x = scan_line(0, CAMERA_MAX_X, CAMERA_MAX_Y - 20, CAMERA_MAX_Y -20);
-    int yl = scan_line(20,20,0,CAMERA_MAX_Y);
-    int yr = scan_line(CAMERA_MAX_X-20,CAMERA_MAX_X-20,0,CAMERA_MAX_Y);
-    
-    if(x > white_threshold) {
-        return 0; 
-    } else if(x < white_threshold && (yl > white_threshold && yr > white_threshold))  {
-      // cut the picture in half ? 
-     // if we want to cut in only into right half should we define x used in the loop in get direction in the field and set it to CAMERA_MAX_X/2 here ? so we would have loop from xmax/2 to xmax 
-    } else{
-        //dead end turn back 
-    }
-}
 
-bool scan_right(int white_threshold){
-	int err = 0, white_count = 0;
 
-	take_picture();
-
-	for(int x = CAMERA_MAX_X/2; x < CAMERA_MAX_X; x++){
-		for(int y = CAMERA_MAX_Y / 4; y < (CAMERA_MAX_Y / 4) * 3; y++){
-			int pix = get_pixel(y, x, 3);
-			if(pix > white_threshold) white_count++;
+int get_direction_from_maze_position(int white_threshold){
+		take_picture();
+        
+        int xf = scan_line(0,CAMERA_MAX_X,CAMERA_MAX_Y-20,CAMERA_MAX_Y-20);
+        int yl = scan_line(20,20,0,CAMERA_MAX_Y);
+        int yr = scan_line(CAMERA_MAX_X-20,CAMERA_MAX_X-20,0,CAMERA_MAX_Y);
+		
+		if(xf > 0)
+			return 0;
 			
+		if(xf < 0 && (yl > white_threshold && yr > white_threshold)){
+			return -255;
 		}
- 	}
-	return white_count > 5000;
+		
+		if(xf < 0 && (yl < white_threshold && yr > white_threshold)) {
+			return 255;
+		}
+		
+        if(xf < 0 && (yl > white_threshold && yr < white_threshold)){
+			return -255;
+		}
+        
+		else {
+		return get_direction_from_camera(white_threshold);	
+	}
 }
+
+
 
 void left_motor(int speed){
         //Set left motor speed accounting for offset
@@ -118,7 +119,7 @@ void move_forward(){
 void move_back(){
 		left_motor(-200);
 		right_motor(-200);
-		sleep1( 0 ,10000);
+		sleep1( 0 ,20000);
 		dead_stop();
 }
 
@@ -139,38 +140,56 @@ int main(){
         init();
         int white_threshold = calculate_white_threshold();
         int direction = 0, i = 0;
-        int quadrant = 1; // shouldn't be 0 ?
+        int quadrant = 0;
 
         while(1){
-			if(quadrant = 0){
-				connect_to_server();
+			if(quadrant == 0){
+				connect_to_server("130.195.6.196", 1024);
 				send_to_server("Please");
-				char pwd[24](recieve_from_server());
+				char pwd[24];
+				receive_from_server(pwd);
 				send_to_server(pwd);
-				sleep1(1,0);
+				sleep1(0, 5000);
 				quadrant++;
 				
 			}
-			if(quadrant = 1){
+			if(quadrant == 1){
 				direction =  get_direction_from_camera(white_threshold);
-				if(direction == -500){
-					quadrant++;
-					continue;
+			    if(direction == 500){
+				quadrant++;
+				move_forward();
 				}
-                adjust_heading(direction);
-                move_forward();
+				else if( direction == -500){
+					dead_stop();
+					move_back();
+				}
+				else{
+					adjust_heading(direction);
+					move_forward();
+				}
                 
 			}
-			if(quadrant = 2){
-				break;
+			
+			if(quadrant == 2){
+				direction =  get_direction_from_maze_position(white_threshold);
+			     if(direction == 500){
+				move_forward();
+				}
+				else if( direction == -500){
+					dead_stop();
+					move_back();
+				}
+				else{
+					adjust_heading(direction);
+					move_forward();
 			}
-			if(quadrant = 3){
+			if(quadrant == 3){
 				break;
 			}
           }
-
         return 0;
 }
+
 
 
 
